@@ -6,7 +6,7 @@
     tools:context="com.example.antonio.bookcrossing.SearchBooks" >
 
     <fragment
-        android:id="@+id/map"
+        android:id="@+id/mapHistory"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         class="com.google.android.gms.maps.MapFragment" />

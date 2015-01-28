@@ -8,13 +8,20 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 
-public class actionChooserActivity extends Activity {
+public class actionChooserActivity extends Activity implements AsyncResponse {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,31 +46,49 @@ public class actionChooserActivity extends Activity {
         }
         else {
             //retrieve points and ranking
-            int points = retrievePoints(username);
-            int ranking = retrieveRanking(username);
-
-            //set the points
-            TextView t = (TextView) findViewById(R.id.points);
-            String textPoints = t.getText().toString();
-            textPoints += " " + points;
-            t.setText(textPoints);
-
-            //set the ranking
-            t = (TextView) findViewById(R.id.rank);
-            String textRank = t.getText().toString();
-            textRank += " " + ranking;
-            t.setText(textRank);
+            retrieveStatus(username);
         }
+
     }
 
     //function to retrieve the points from a remote database
-    private int retrievePoints(String username) {
-        return 10;
+    private void retrieveStatus(String username) {
+        String url = "http://bookcrossing-bookcrossing.rhcloud.com/readStatus.php?";
+        Connection httpConnection = new Connection();
+        httpConnection.delegate = this;
+        httpConnection.execute(url + "v=" + username);
     }
 
-    //function to retrieve the rank position
-    private int retrieveRanking(String username) {
-        return 2;
+    @Override
+    /*the resultant string is in the format points: , position: */
+    public void processFinish(String result){
+        Log.d("hello", "process finish");
+        try{
+            JSONObject Json = new JSONObject(result);
+            String points = Json.getString("points");
+            String position = Json.getString("position");
+
+            //now it's possible to update the form according to the gathered results
+            updateStatus(points, position);
+        }
+        catch(JSONException je) {
+            Log.d("error", je.toString());
+        }
+    }
+
+    //update the form with the just received results
+    private void updateStatus(String points, String position) {
+        //set the points
+        TextView t = (TextView) findViewById(R.id.points);
+        String textPoints = t.getText().toString();
+        textPoints += " " + points;
+        t.setText(textPoints);
+
+        //set the ranking
+        t = (TextView) findViewById(R.id.rank);
+        String textRank = t.getText().toString();
+        textRank += " " + position;
+        t.setText(textRank);
     }
 
     @Override
@@ -86,19 +111,39 @@ public class actionChooserActivity extends Activity {
     }
 
     //function that launches the activity of deposit a book
-    public void depositBook() {
+    public void depositBook(View v) {
         Intent intent = new Intent(this, DepositBook.class);
         startActivity(intent);
     }
 
     //function that launches the activity of searching books around
-    public void searchBooks() {
+    public void searchBooks(View v) {
         Intent intent = new Intent(this, SearchBooks.class);
         startActivity(intent);
     }
 
-    //quit the app with a click
-    public void exitApp() {
+    //function with which a user takes a book
+    /*
+    * The user inserts just the isbn of the book, the program
+    * will insert the book on the database
+    * */
+    public void bookTaken(View v) {
+        Log.d("book", "take");
+        EditText isbnT = (EditText) findViewById(R.id.isbnT);
+        String isbn = isbnT.getText().toString();
+        bookTake bt = new bookTake(this, isbn);
+        bt.doRequest();
+    }
 
+    /*
+    * Function that given the isbn of the book tries to give the user
+    * the history of the book
+    * */
+    public void bookHistory(View v) {
+        EditText isbnS = (EditText) findViewById(R.id.isbnS);
+        String isbn = isbnS.getText().toString();
+        Intent intent = new Intent(this, BookHistory.class);
+        intent.putExtra("isbn", isbn);
+        startActivity(intent);
     }
 }

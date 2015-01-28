@@ -9,35 +9,29 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:background="#AAFFFDBB"
-    android:textColor="#6600FFA0"
     tools:context="com.example.antonio.bookcrossing.LoginActivity">
 
-    <!-- Login progress -->
-    <ProgressBar
-        android:id="@+id/login_progress"
-        style="?android:attr/progressBarStyleLarge"
+    <ImageView
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:id="@+id/userView"
+        android:layout_alignParentTop="true"
+        android:onClick="chooseImage"
+        android:layout_alignParentLeft="true"
+        android:background="@drawable/user" />
+
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:visibility="gone"/>
-
-        <FrameLayout
-            android:id="@+id/frameLayout1"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_marginTop="19dp"
-            android:background="@drawable/user"
-            android:onClick="chooseImage" >
-        </FrameLayout>
-
+        android:layout_below="@+id/userView">
 
         <TableLayout
-            android:id="@+id/tableLayout1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:textColor="#007AF0"
-            android:layout_below="@+id/frameLayout1" >
+        android:id="@+id/tableLayout1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#007AF0"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true">
 
             <TableRow
                 android:id="@+id/tableRow1"
@@ -146,30 +140,29 @@
             </TableRow>
 
 
-        </TableLayout>
 
-        <Button
-            android:id="@+id/ok"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="#007AF0"
-            android:text="OK"
-            android:onClick="commitData"
-            android:layout_below="@+id/tableLayout1"
-            android:layout_alignRight="@+id/frameLayout1" />
 
-        <Button
-            android:id="@+id/cancel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="#007AF0"
-            android:text="Cancel"
-            android:layout_alignTop="@+id/ok"
-            android:layout_alignRight="@+id/tableLayout1"
-            android:layout_marginRight="42dp"
-            android:onClick="cancelData"
-            />
+    <Button
+        android:id="@+id/ok"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#007AF0"
+        android:text="OK"
+        android:onClick="commitData"
+        android:layout_below="@+id/tableLayout1"
+        android:layout_centerHorizontal="true" />
 
+    <Button
+        android:id="@+id/cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#007AF0"
+        android:text="Cancel"
+        android:onClick="cancelData"
+        android:layout_alignTop="@+id/ok"
+        android:layout_alignLeft="@+id/tableLayout1" />
+    </TableLayout>
+    </RelativeLayout>
 </RelativeLayout>
 
 

@@ -2,6 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.antonio.bookcrossing" >
 
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="true" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/logo"
@@ -9,7 +13,7 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name=".StartInterface"
-            android:label="@string/app_name" >
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -20,15 +24,16 @@
             android:name=".LoginActivity"
             android:label="@string/title_activity_login"
             android:parentActivityName=".StartInterface"
-            android:windowSoftInputMode="adjustResize|stateVisible" >
+            android:windowSoftInputMode="adjustPan" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.antonio.bookcrossing.StartInterface" />
         </activity>
         <activity
             android:name=".actionChooserActivity"
-            android:label="@string/title_activity_action_chooser"
-            android:parentActivityName=".StartInterface" >
+            android:label = "@string/title_activity_action_chooser"
+            android:parentActivityName=".StartInterface"
+            android:windowSoftInputMode="adjustPan">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.antonio.bookcrossing.StartInterface" />
@@ -36,7 +41,8 @@
         <activity
             android:name=".DepositBook"
             android:label="@string/title_activity_deposit_book"
-            android:parentActivityName=".actionChooserActivity" >
+            android:parentActivityName=".actionChooserActivity"
+            android:windowSoftInputMode="adjustPan">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.antonio.bookcrossing.actionChooserActivity" />
@@ -44,7 +50,25 @@
         <activity
             android:name=".SearchBooks"
             android:label="@string/title_activity_search_books"
-            android:parentActivityName=".actionChooserActivity" >
+            android:parentActivityName=".actionChooserActivity"
+            android:windowSoftInputMode="adjustPan">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.antonio.bookcrossing.actionChooserActivity" />
+        </activity>
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyB82WeHWI5WAmbZfk4UrV1GdSTqFEUsY-8" />
+
+        <activity
+            android:name=".BookHistory"
+            android:label="@string/title_activity_book_history"
+            android:parentActivityName=".actionChooserActivity"
+            android:windowSoftInputMode="adjustPan">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.antonio.bookcrossing.actionChooserActivity" />
@@ -55,5 +79,14 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
+
+    <uses-feature android:name="android.hardware.camera" />
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
 </manifest>

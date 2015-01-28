@@ -24,6 +24,7 @@ import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -32,8 +33,10 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,27 +45,29 @@ import java.util.List;
  * A login screen that offers login via email/password.
 
  */
-public class LoginActivity extends Activity{
+public class LoginActivity extends Activity implements AsyncResponse{
 
     private boolean imageChanged = false;
     private String imagePath = "";
     private static final int PICK_IMAGE = 1;
     private String selectedImagePath;
     public final static String EXTRA_MESSAGE = "com.example.antonio.bookcrossing.MESSAGE";
+    public final static String url = "http://bookcrossing-bookcrossing.rhcloud.com/insertUsers.php?";
 
-    /**
-     * A dummy authentication store containing known user names and passwords.
-     * TODO: remove after connecting to a real authentication system.
-     */
-    private static final String[] DUMMY_CREDENTIALS = new String[]{
-            "foo@example.com:hello", "bar@example.com:world"
-    };
+    //private variables to store values inserted
+    private String sName = "";
+    private String sUsername = "";
+    private String sSurname = "";
+    private String sCity = "";
+    private String sEmail = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         setupActionBar();
+
+        Log.d("login activity", "login");
     }
 
     /**
@@ -113,7 +118,7 @@ public class LoginActivity extends Activity{
         EditText city = (EditText) this.findViewById(R.id.city);
 
         /*Very simple checking fields*/
-        /*if(name.getText().toString().equals(""))
+       /* if(name.getText().toString().equals(""))
             return;
         if(surname.getText().toString().equals(""))
             return;
@@ -125,29 +130,65 @@ public class LoginActivity extends Activity{
         if(city.getText().toString().equals(""))
             return;*/
 
-        //store the input data into the shared preferences
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString("username", username.getText().toString());
-        editor.putString("name", name.getText().toString());
-        editor.putString("email", email.getText().toString());
-        editor.putString("surname", surname.getText().toString());
-        editor.putString("city", city.getText().toString());
-        if(imageChanged) {
-            editor.putString("image", imagePath);
-            System.err.print("\n imageChanged: " + imagePath + "\n");
-        }
-
-        editor.commit();
-
         //sets the login so I don't have to redo it
         StartInterface.login = 1;
 
-        //start an activity
-        Intent intent = new Intent(this, actionChooserActivity.class);
-        intent.putExtra(EXTRA_MESSAGE, username.getText().toString());
-        startActivity(intent);
+        Log.d("login", "connection");
 
+        Connection c = new Connection();
+        c.delegate = this;
+
+        //preare fields to put in the request
+        sName = name.getText().toString();
+        sSurname = surname.getText().toString();
+        sUsername = username.getText().toString();
+        sCity = city.getText().toString();
+        sEmail = email.getText().toString();
+
+        //request to send to the db
+        c.execute(url + "v=" + sName + "|" + sSurname + "|" + sUsername + "|"
+                + sEmail + "|" + sCity);
+    }
+
+    @Override
+    public void processFinish(String result) {
+        //make toast with the response
+        Toast.makeText(this, result, Toast.LENGTH_LONG);
+
+        if(result.contains("Username correctly inserted")) {
+            //store the input data into the shared preferences
+            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putString("username", sUsername);
+            editor.putString("name", sName);
+            editor.putString("email", sEmail);
+            editor.putString("surname", sSurname);
+            editor.putString("city", sCity);
+            if(imageChanged) {
+                editor.putString("image", imagePath);
+                System.err.print("\n imageChanged: " + imagePath + "\n");
+            }
+
+            editor.commit();
+
+            //start activity
+            Intent intent = new Intent(this, actionChooserActivity.class);
+            intent.putExtra(EXTRA_MESSAGE, sUsername);
+            startActivity(intent);
+        }
+
+        else {
+            EditText name = (EditText) this.findViewById(R.id.name);
+            EditText surname = (EditText) this.findViewById(R.id.surname);
+            EditText username = (EditText) this.findViewById(R.id.username);
+            EditText email = (EditText) this.findViewById(R.id.email);
+            EditText city = (EditText) this.findViewById(R.id.city);
+            name.setText("");
+            surname.setText("");
+            username.setText("");
+            email.setText("");
+            city.setText("");
+        }
     }
 
     /*
@@ -173,11 +214,11 @@ public class LoginActivity extends Activity{
 
                     Bitmap yourSelectedImage = BitmapFactory.decodeFile(filePath);
                     System.err.print("\n\n" + filePath + "\n\n");
-                    FrameLayout frameLayout = (FrameLayout) this.findViewById(R.id.frameLayout1);
+                    ImageView imageView = (ImageView) this.findViewById(R.id.userView);
 
                     BitmapDrawable background =
                             new BitmapDrawable(getResources(), yourSelectedImage);
-                    frameLayout.setBackground(background);
+                    imageView.setBackground(background);
                     imageChanged = true;
                     imagePath = filePath;
                 }
@@ -186,11 +227,7 @@ public class LoginActivity extends Activity{
 
     //check if the email is correctly inserted
     private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
         return email.contains("@");
     }
 
 }
-
-
-

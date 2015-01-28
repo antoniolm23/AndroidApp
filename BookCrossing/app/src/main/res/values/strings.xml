@@ -5,9 +5,11 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="appLogo">appLogo</string>
-    <string name="title_activity_action_chooser">actionChooserActivity</string>
+    <string name="title_activity_action_chooser">Choose Action</string>
     <string name="title">LOGIN</string>
-    <string name="title_activity_deposit_book">DepositBook</string>
-    <string name="title_activity_search_books">SearchBooks</string>
+    <string name="title_activity_deposit_book">Deposit a Book</string>
+    <string name="title_activity_search_books">Search Books</string>
+    <string name="title_activity_take_book">Take a book</string>
+    <string name="title_activity_book_history">History of a Book</string>
 
 </resources>
